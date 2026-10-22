@@ -1,0 +1,10 @@
+name: handly_core
+description: Handly 좌표 처리(PRD 10-3), DTW 판정(M2-5), 틀린 이유 힌트(M2-7). demo/의 Python 코드를 그대로 옮김.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dev_dependencies:
+  test: ^1.25.0

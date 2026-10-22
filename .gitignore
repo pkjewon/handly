@@ -1,0 +1,22 @@
+# 얼굴이 나온 영상·좌표 데이터는 Google Drive에 보관 (PRD 10-5, 10-7)
+demo/videos/
+demo/data/takes/
+demo/data/calibration.png
+ml/dataset.npz
+ml/models/
+*.mp4
+*.mov
+
+# MediaPipe 모델 파일 (README의 링크에서 내려받기)
+demo/models/*.task
+
+__pycache__/
+*.pyc
+.venv/
+
+# Flutter / Dart
+.dart_tool/
+build/
+.flutter-plugins*
+*.iml
+dist/

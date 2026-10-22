@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Handly — 수어 학습 앱 스토리보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C2033;
+    --ink-soft:#5A5E73;
+    --paper:#F1EEE6;
+    --paper-raised:#FBFAF6;
+    --line:#DAD5C8;
+    --teal:#14807A;
+    --teal-deep:#0B5E5A;
+    --teal-tint:#DCEEEA;
+    --coral:#FF6152;
+    --coral-tint:#FFE2DE;
+    --amber:#F0A94E;
+    --sky-top:#231E45;
+    --sky-mid:#6A4E86;
+    --sky-horizon:#E98A55;
+    --sky-low:#F7C873;
+    --page-bg:#EAE6DC;
+    --page-fg:#1C2033;
+    --card-bg:#FFFFFF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --page-bg:#15141B;
+      --page-fg:#EDEAE2;
+      --card-bg:#1E1D26;
+    }
+  }
+  :root[data-theme="dark"]{
+    --page-bg:#15141B;
+    --page-fg:#EDEAE2;
+    --card-bg:#1E1D26;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--page-bg);
+    color:var(--page-fg);
+    font-family:'Noto Sans KR', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  .num{font-family:'Space Grotesk', sans-serif;}
+
+  /* ---------- Page chrome ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    max-width:1400px;
+    margin:0 auto;
+    padding:48px 32px 28px;
+  }
+  .mark{
+    width:44px;height:44px;flex:none;
+    border-radius:14px;
+    background:var(--teal);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .mark svg{width:24px;height:24px;}
+  .brand-block h1{
+    font-size:1.15rem;
+    font-weight:900;
+    letter-spacing:-0.01em;
+    margin:0 0 2px;
+  }
+  .brand-block p{
+    margin:0;
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    max-width:56ch;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .brand-block p{ color:#A7A4B5; }
+  }
+
+  .scroll-wrap{
+    overflow-x:auto;
+    padding:0 32px 72px;
+    scrollbar-width:thin;
+  }
+  .storyboard{
+    display:flex;
+    gap:40px;
+    width:max-content;
+    padding-bottom:12px;
+  }
+  .screen-block{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+  }
+  .screen-tag{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .screen-tag .no{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:0.8rem;
+    color:var(--teal);
+  }
+  .screen-tag .name{
+    font-size:0.95rem;
+    font-weight:700;
+    color:var(--page-fg);
+  }
+
+  /* ---------- Phone frame ---------- */
+  .phone{
+    width:300px;
+    height:648px;
+    border-radius:38px;
+    background:#0C0C10;
+    padding:12px;
+    box-shadow:0 30px 60px -25px rgba(0,0,0,0.45);
+    flex:none;
+  }
+  .screen{
+    position:relative;
+    width:100%;
+    height:100%;
+    border-radius:28px;
+    overflow:hidden;
+    background:var(--paper);
+    display:flex;
+    flex-direction:column;
+  }
+  .notch{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:120px; height:22px;
+    background:#0C0C10;
+    border-radius:0 0 14px 14px;
+    z-index:20;
+  }
+  .statusbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 22px 4px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:0.72rem;
+    font-weight:600;
+    z-index:15;
+  }
+  .statusbar .bars{display:flex; gap:3px; align-items:flex-end;}
+  .statusbar .bars span{width:3px; background:currentColor; border-radius:1px;}
+  .statusbar .bars span:nth-child(1){height:4px;}
+  .statusbar .bars span:nth-child(2){height:6px;}
+  .statusbar .bars span:nth-child(3){height:8px;}
+  .statusbar .bars span:nth-child(4){height:10px;}
+
+  .bottomnav{
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    padding:10px 8px 16px;
+    background:var(--paper-raised);
+    border-top:1px solid var(--line);
+  }
+  .navitem{
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    color:var(--ink-soft);
+  }
+  .navitem svg{width:20px;height:20px;}
+  .navitem span{font-size:0.62rem; font-weight:500;}
+  .navitem.active{color:var(--teal);}
+
+  /* ---------- Hand icon (shared) ---------- */
+  .hand-icon path{fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round;}
+
+  /* ---------- Screen 1: Home ---------- */
+  .home-body{ flex:1; padding:8px 22px 0; overflow:hidden; }
+  .greet{ font-size:0.78rem; color:var(--ink-soft); margin:6px 0 2px; }
+  .headline{
+    font-size:1.28rem;
+    font-weight:900;
+    letter-spacing:-0.01em;
+    line-height:1.28;
+    margin:0 0 16px;
+  }
+  .streak-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:6px 12px 6px 8px;
+    margin-bottom:18px;
+  }
+  .streak-pill .dot{width:8px;height:8px;border-radius:50%; background:var(--amber);}
+  .streak-pill b{font-family:'Space Grotesk'; font-size:0.85rem; font-weight:700;}
+  .streak-pill small{font-size:0.72rem; color:var(--ink-soft);}
+
+  .today-card{
+    background:var(--ink);
+    border-radius:24px;
+    padding:20px;
+    color:#F1EEE6;
+    position:relative;
+    overflow:hidden;
+    margin-bottom:16px;
+  }
+  .today-card .eyebrow{font-size:0.72rem; color:#B9B6C9; margin-bottom:6px;}
+  .today-card .word{font-size:1.5rem; font-weight:900; margin-bottom:14px;}
+  .today-card .frame{
+    width:100%; height:118px;
+    border-radius:16px;
+    background:linear-gradient(155deg,#2B2F45,#1C2033);
+    position:relative;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:14px;
+  }
+  .today-card .frame .reticle{
+    position:absolute; inset:14px;
+    border-radius:12px;
+  }
+  .today-card .frame .reticle i{
+    position:absolute; width:14px; height:14px; border-color:var(--teal); opacity:0.9;
+  }
+  .today-card .frame .reticle i:nth-child(1){top:0;left:0;border-top:2px solid; border-left:2px solid; border-radius:4px 0 0 0;}
+  .today-card .frame .reticle i:nth-child(2){top:0;right:0;border-top:2px solid; border-right:2px solid; border-radius:0 4px 0 0;}
+  .today-card .frame .reticle i:nth-child(3){bottom:0;left:0;border-bottom:2px solid; border-left:2px solid; border-radius:0 0 0 4px;}
+  .today-card .frame .reticle i:nth-child(4){bottom:0;right:0;border-bottom:2px solid; border-right:2px solid; border-radius:0 0 4px 0;}
+  .today-card .frame svg{width:46px;height:46px; color:#F1EEE6; opacity:0.9;}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    border:none; border-radius:14px;
+    font-family:'Noto Sans KR'; font-weight:700; font-size:0.88rem;
+    padding:13px 18px;
+    cursor:pointer;
+  }
+  .btn-teal{ background:var(--teal); color:#fff; width:100%; }
+  .btn-ghost{ background:#F1EEE6; color:var(--ink); border:1px solid var(--line); width:100%; }
+
+  .quicklinks{ display:flex; gap:10px; margin-top:16px; }
+  .qcard{
+    flex:1;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:12px;
+  }
+  .qcard .label{font-size:0.78rem; font-weight:700; margin:6px 0 2px;}
+  .qcard .meta{font-size:0.68rem; color:var(--ink-soft);}
+  .qcard svg{width:18px;height:18px; color:var(--teal);}
+  .qcard.coral svg{color:var(--coral);}
+  .qcard .badge{
+    display:inline-block; margin-top:6px;
+    background:var(--coral-tint); color:var(--coral);
+    font-size:0.62rem; font-weight:700;
+    padding:2px 8px; border-radius:999px;
+  }
+
+  /* ---------- Screen 2: Lesson capture ---------- */
+  .cam-screen{ background:linear-gradient(180deg,#20233A,#14151F 70%); color:#EFEDF5; position:relative; }
+  .cam-grid{
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size:38px 38px;
+    opacity:0.5;
+  }
+  .cam-top{
+    position:relative; z-index:5;
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding:8px 20px 0;
+  }
+  .cam-word{
+    background:rgba(12,12,16,0.55);
+    backdrop-filter:blur(6px);
+    border-radius:14px;
+    padding:10px 14px;
+  }
+  .cam-word .label{font-size:0.66rem; color:#B9B6C9; margin-bottom:2px;}
+  .cam-word .word{font-size:1.05rem; font-weight:900;}
+  .ref-thumb{
+    width:56px; height:56px; border-radius:14px;
+    background:linear-gradient(155deg,#3A3F5C,#22243A);
+    border:2px solid var(--teal);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ref-thumb svg{width:28px;height:28px; color:var(--teal-tint);}
+
+  .cam-center{
+    position:relative; z-index:5;
+    flex:1;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .big-reticle{ position:relative; width:180px; height:180px; }
+  .big-reticle i{ position:absolute; width:26px; height:26px; border-color:var(--teal); }
+  .big-reticle i:nth-child(1){top:0;left:0;border-top:3px solid; border-left:3px solid; border-radius:8px 0 0 0;}
+  .big-reticle i:nth-child(2){top:0;right:0;border-top:3px solid; border-right:3px solid; border-radius:0 8px 0 0;}
+  .big-reticle i:nth-child(3){bottom:0;left:0;border-bottom:3px solid; border-left:3px solid; border-radius:0 0 0 8px;}
+  .big-reticle i:nth-child(4){bottom:0;right:0;border-bottom:3px solid; border-right:3px solid; border-radius:0 0 8px 0;}
+  .big-reticle .hand-icon{ position:absolute; inset:0; margin:auto; width:74px; height:74px; color:rgba(241,238,230,0.85); }
+
+  .cam-sheet{
+    position:relative; z-index:5;
+    background:rgba(20,21,31,0.72);
+    backdrop-filter:blur(10px);
+    border-top:1px solid rgba(255,255,255,0.08);
+    padding:16px 22px 18px;
+  }
+  .progress-dots{ display:flex; gap:8px; margin-bottom:12px; }
+  .progress-dots i{
+    width:22px; height:22px; border-radius:7px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.14);
+  }
+  .progress-dots i.done{ background:var(--teal); border-color:var(--teal); }
+  .progress-dots i.cur{ background:rgba(20,128,122,0.25); border-color:var(--teal); }
+  .cam-instruction{ font-size:0.82rem; color:#D7D5E2; margin-bottom:12px; }
+  .feedback-toast{
+    display:flex; align-items:center; gap:8px;
+    background:var(--teal); color:#fff;
+    border-radius:12px; padding:10px 14px;
+    font-size:0.82rem; font-weight:700;
+  }
+  .feedback-toast svg{width:16px;height:16px;}
+
+  /* ---------- Screen 3: Arcade hub ---------- */
+  .sky-screen{
+    background:linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 45%, var(--sky-horizon) 78%, var(--sky-low) 100%);
+    color:#F5F1E8;
+    position:relative;
+  }
+  .sky-noise{
+    position:absolute; inset:0;
+    background-image:radial-gradient(circle at 20% 15%, rgba(255,255,255,0.35) 0 2px, transparent 2px),
+      radial-gradient(circle at 70% 8%, rgba(255,255,255,0.25) 0 1.5px, transparent 1.5px),
+      radial-gradient(circle at 85% 22%, rgba(255,255,255,0.3) 0 1.5px, transparent 1.5px),
+      radial-gradient(circle at 40% 5%, rgba(255,255,255,0.2) 0 1px, transparent 1px);
+    opacity:0.9;
+  }
+  .arcade-top{ position:relative; z-index:4; padding:6px 22px 0; display:flex; justify-content:space-between; align-items:center; }
+  .arcade-title{ font-size:1.15rem; font-weight:900; }
+  .stars-pill{
+    display:flex; align-items:center; gap:5px;
+    background:rgba(12,10,20,0.32);
+    border-radius:999px; padding:6px 11px;
+    font-family:'Space Grotesk'; font-weight:700; font-size:0.82rem;
+  }
+  .stars-pill svg{width:14px;height:14px;}
+
+  .arcade-body{ position:relative; z-index:4; padding:20px 20px 0; display:flex; flex-direction:column; gap:14px; flex:1; }
+  .mode-card{
+    border-radius:22px;
+    padding:18px;
+    position:relative;
+    overflow:hidden;
+  }
+  .mode-card.fall{ background:rgba(20,18,38,0.42); border:1px solid rgba(255,255,255,0.16); }
+  .mode-card.match{ background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.22); }
+  .mode-card .mtitle{ font-size:1.02rem; font-weight:900; margin-bottom:4px; }
+  .mode-card .mdesc{ font-size:0.76rem; color:#EDE9F5; opacity:0.85; margin-bottom:14px; line-height:1.5; max-width:22ch; }
+  .mode-card .mfoot{ display:flex; justify-content:space-between; align-items:center; }
+  .diff-dots{ display:flex; gap:4px; }
+  .diff-dots i{ width:6px;height:6px;border-radius:50%; background:rgba(255,255,255,0.9); }
+  .diff-dots i.off{ background:rgba(255,255,255,0.28); }
+  .mini-btn{
+    background:#F1EEE6; color:var(--ink);
+    border:none; border-radius:10px;
+    font-weight:700; font-size:0.74rem;
+    padding:8px 16px;
+  }
+  .falling-deco{ position:absolute; top:10px; right:14px; display:flex; flex-direction:column; gap:16px; opacity:0.85; }
+  .falling-deco .glyph{ width:22px; height:22px; }
+
+  /* ---------- Screen 4: Falling game ---------- */
+  .lane-field{ position:relative; z-index:4; flex:1; margin:8px 16px 0; border-radius:18px; overflow:hidden; background:rgba(10,9,22,0.28); border:1px solid rgba(255,255,255,0.14); }
+  .lanes{ position:absolute; inset:0; display:flex; }
+  .lane{ flex:1; border-right:1px dashed rgba(255,255,255,0.14); position:relative; }
+  .lane:last-child{ border-right:none; }
+  .lane .glyph{
+    position:absolute; left:50%; transform:translateX(-50%);
+    width:34px; height:34px; border-radius:10px;
+    background:rgba(241,238,230,0.92);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lane .glyph svg{ width:18px;height:18px; color:var(--sky-mid); }
+  .hitline{
+    position:absolute; left:0; right:0; bottom:74px;
+    height:2px; background:var(--amber);
+    box-shadow:0 0 10px 1px rgba(240,169,78,0.7);
+  }
+  .hud{ position:relative; z-index:5; display:flex; justify-content:space-between; align-items:center; padding:10px 22px 0; }
+  .score-block .lbl{ font-size:0.62rem; color:#D9D5EA; }
+  .score-block .val{ font-family:'Space Grotesk'; font-weight:700; font-size:1.3rem; }
+  .lives{ display:flex; gap:5px; }
+  .lives svg{ width:16px;height:16px; color:var(--coral); }
+  .combo-pill{
+    align-self:flex-start;
+    margin:10px 22px 0;
+    display:inline-flex; background:rgba(255,97,82,0.85); color:#fff;
+    font-family:'Space Grotesk'; font-weight:700; font-size:0.72rem;
+    padding:4px 10px; border-radius:999px;
+  }
+  .cam-strip{
+    position:relative; z-index:5;
+    margin:10px 16px 16px;
+    height:96px;
+    border-radius:16px;
+    background:linear-gradient(155deg,#2B2F45,#181A28);
+    border:2px solid var(--amber);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .cam-strip svg{ width:36px;height:36px; color:#F1EEE6; opacity:0.9; }
+  .cam-strip .catch-label{
+    position:absolute; top:-11px; left:14px;
+    background:var(--amber); color:#20182E;
+    font-size:0.62rem; font-weight:800;
+    padding:3px 9px; border-radius:999px;
+  }
+
+  /* ---------- Screen 5: Word match game ---------- */
+  .match-top{ position:relative; z-index:4; padding:16px 22px 0; display:flex; justify-content:space-between; align-items:center; }
+  .timer-ring{
+    width:44px; height:44px; border-radius:50%;
+    background:conic-gradient(var(--amber) 0deg 260deg, rgba(255,255,255,0.18) 260deg 360deg);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .timer-ring .inner{
+    width:34px;height:34px;border-radius:50%;
+    background:rgba(20,18,38,0.85);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Grotesk'; font-weight:700; font-size:0.72rem; color:#fff;
+  }
+  .round-lives{ display:flex; gap:5px; }
+  .round-lives i{ width:8px;height:8px;border-radius:50%; background:#F1EEE6; }
+  .round-lives i.spent{ background:rgba(255,255,255,0.25); }
+
+  .prompt-block{ position:relative; z-index:4; text-align:center; padding:26px 24px 0; }
+  .prompt-block .lbl{ font-size:0.74rem; color:#E7E3F2; opacity:0.85; margin-bottom:8px; }
+  .prompt-block .word{ font-size:2.1rem; font-weight:900; letter-spacing:-0.01em; }
+
+  .match-cam{
+    position:relative; z-index:4;
+    flex:1;
+    margin:22px 26px 0;
+    border-radius:20px;
+    background:rgba(10,9,22,0.3);
+    border:1px solid rgba(255,255,255,0.16);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .match-cam .big-reticle i{ border-color:#F1EEE6; }
+  .match-cam .big-reticle .hand-icon{ color:rgba(241,238,230,0.9); }
+
+  .match-footnote{ position:relative; z-index:4; text-align:center; font-size:0.74rem; color:#E7E3F2; opacity:0.85; padding:14px 30px 18px; }
+
+  /* ---------- Screen 6: Review ---------- */
+  .review-body{ flex:1; padding:8px 22px 0; display:flex; flex-direction:column; }
+  .review-head{ margin:8px 0 18px; }
+  .review-head .word{ font-size:1.28rem; font-weight:900; }
+  .review-head .sub{ font-size:0.8rem; color:var(--ink-soft); margin-top:4px; }
+  .review-head .count{ color:var(--coral); font-weight:800; }
+
+  .stack{ position:relative; flex:1; min-height:280px; }
+  .rcard{
+    position:absolute; inset:0;
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:20px;
+    box-shadow:0 18px 30px -20px rgba(0,0,0,0.35);
+  }
+  .rcard.back2{ transform:translateY(14px) scale(0.96); opacity:0.7; z-index:1; }
+  .rcard.back1{ transform:translateY(7px) scale(0.98); opacity:0.88; z-index:2; }
+  .rcard.front{ z-index:3; display:flex; flex-direction:column; }
+  .rcard .top-row{ display:flex; justify-content:space-between; align-items:flex-start; }
+  .rcard .wrong-badge{
+    background:var(--coral-tint); color:var(--coral);
+    font-size:0.68rem; font-weight:800;
+    padding:4px 10px; border-radius:999px;
+  }
+  .rcard .last{ font-size:0.68rem; color:var(--ink-soft); }
+  .rcard .illus{
+    flex:1; margin:14px 0;
+    border-radius:16px;
+    background:linear-gradient(155deg,#2B2F45,#1C2033);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .rcard .illus svg{ width:48px;height:48px; color:#F1EEE6; opacity:0.9; }
+  .rcard .word-row{ display:flex; justify-content:space-between; align-items:baseline; }
+  .rcard .word-row .word{ font-size:1.2rem; font-weight:900; }
+  .rcard .word-row .rate{ font-family:'Space Grotesk'; font-weight:700; font-size:0.82rem; color:var(--ink-soft); }
+
+  .review-cta{ margin:16px 0 22px; }
+
+  @media (max-width: 640px){
+    .topbar{padding:32px 20px 20px;}
+    .scroll-wrap{padding:0 20px 48px;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="mark">
+      <svg viewBox="0 0 24 24" class="hand-icon" style="color:#fff"><path d="M8 13V6a1.4 1.4 0 0 1 2.8 0v5.2M10.8 11V4.6a1.4 1.4 0 0 1 2.8 0V11M13.6 11.2V6a1.4 1.4 0 0 1 2.8 0v6.4M16.4 12.4v-2a1.3 1.3 0 0 1 2.6 0v5.6c0 3-2.1 5.5-5.6 5.5-2.3 0-3.5-.7-4.6-2L6.2 15.8c-.6-.8-.4-1.8.4-2.3.7-.4 1.5-.2 2 .4l1.4 1.6"/></svg>
+    </div>
+    <div class="brand-block">
+      <h1>Handly — 수어 학습 앱 스토리보드</h1>
+      <p>카메라로 손 모양을 촬영해 배우고, 아케이드 게임 두 종류로 복습하고, 틀린 수어는 오답노트로 다시 만나는 6개 핵심 화면입니다.</p>
+    </div>
+  </div>
+
+  <div class="scroll-wrap">
+    <div class="storyboard">
+
+      <!-- SCREEN 1: HOME -->
+      <div class="screen-block">
+        <div class="screen-tag"><span class="no num">01</span><span class="name">홈</span></div>
+        <div class="phone">
+          <div class="screen">
+            <div class="notch"></div>
+            <div class="statusbar">
+              <span class="num">9:41</span>
+              <span class="bars"><span></span><span></span><span></span><span></span></span>
+            </div>
+            <div class="home-body">
+              <div class="greet">안녕하세요, 민지님</div>
+              <div class="headline">오늘도 손끝으로<br>한마디 건네볼까요</div>
+              <div class="streak-pill">
+                <span class="dot"></span>
+                <b class="num">12</b>
+                <small>일 연속 학습 중</small>
+              </div>
+              <div class="today-card">
+                <div class="eyebrow">오늘의 수어</div>
+                <div class="word">감사합니다</div>
+                <div class="frame">
+                  <div class="reticle"><i></i><i></i><i></i><i></i></div>
+                  <svg viewBox="0 0 24 24" class="hand-icon"><path d="M8 13V6a1.4 1.4 0 0 1 2.8 0v5.2M10.8 11V4.6a1.4 1.4 0 0 1 2.8 0V11M13.6 11.2V6a1.4 1.4 0 0 1 2.8 0v6.4M16.4 12.4v-2a1.3 1.3 0 0 1 2.6 0v5.6c0 3-2.1 5.5-5.6 5.5-2.3 0-3.5-.7-4.6-2L6.2 15.8c-.6-.8-.4-1.8.4-2.3.7-.4 1.5-.2 2 .4l1.4 1.6"/></svg>
+                </div>
+                <button class="btn btn-teal">학습 시작하기</button>
+              </div>
+              <div class="quicklinks">
+                <div class="qcard">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10l8-6 8 6v10a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1Z"/></svg>
+                  <div class="label">아케이드</div>
+                  <div class="meta">2개 게임 열림</div>
+                </div>
+                <div class="qcard coral">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 1 1 2.5 5.8M4 12v5.8h5.8"/></svg>
+                  <div class="label">복습노트</div>
+                  <span class="badge">8개 대기중</span>
+                </div>
+              </div>
+            </div>
+            <div class="bottomnav">
+              <div class="navitem active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1Z"/></svg>
+                <span>홈</span>
+              </div>
+              <div class="navitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 13V6a1.4 1.4 0 0 1 2.8 0v5.2M13.6 11.2V6a1.4 1.4 0 0 1 2.8 0v6.4M16.4 12.4v5.6c0 3-2.1 5.5-5.6 5.5-2.3 0-3.5-.7-4.6-2L4.2 17.8"/></svg>
+                <span>학습</span>
+              </div>
+              <div class="navitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10l8-6 8 6v10a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1Z"/></svg>
+                <span>아케이드</span>
+              </div>
+              <div class="navitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 1 1 2.5 5.8M4 12v5.8h5.8"/></svg>
+                <span>복습</span>
+              </div>
+              <div class="navitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1-3.6 3.8-5.4 7-5.4s6 1.8 7 5.4"/></svg>
+                <span>내정보</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 2: LESSON CAPTURE -->
+      <div class="screen-block">
+        <div class="screen-tag"><span class="no num">02</span><span class="name">학습 · 카메라 촬영</span></div>
+        <div class="phone">
+          <div class="screen cam-screen">
+            <div class="notch"></div>
+            <div class="cam-grid"></div>
+            <div class="statusbar" style="position:relative; z-index:5;">
+              <span class="num">9:41</span>
+              <span class="bars"><span></span><span></span><span></span><span></span></span>
+            </div>
+            <div class="cam-top">
+              <div class="cam-word">
+                <div class="label">3 / 5 동작</div>
+                <div class="word">감사합니다</div>
+              </div>
+              <div class="ref-thumb">
+                <svg viewBox="0 0 24 24" class="hand-icon"><path d="M8 13V6a1.4 1.4 0 0 1 2.8 0v5.2M10.8 11V4.6a1.4 1.4 0 0 1 2.8 0V11M13.6 11.2V6a1.4 1.4 0 0 1 2.8 0v6.4M16.4 12.4v-2a1.3 1.3 0 0 1 2.6 0v5.6c0 3-2.1 5.5-5.6 5.5-2.3 0-3.5-.7-4.6-2L6.2 15.8c-.6-.8-.4-1.8.4-2.3.7-.4 1.5-.2 2 .4l1.4 1.6"/></svg>
+              </div>
+            </div>
+            <div class="cam-center">
+              <div class="big-reticle">
+                <i></i><i></i><i></i><i></i>
+                <svg viewBox="0 0 24 24" class="hand-icon"><path d="M8 13V6a1.4 1.4 0 0 1 2.8 0v5.2M10.8 11V4.6a1.4 1.4 0 0 1 2.8 0V11M13.6 11.2V6a1.4 1.4 0 0 1 2.8 0v6.4M16.4 12.4v-2a1.3 1.3 0 0 1 2.6 0v5.6c0 3-2.1 5.5-5.6 5.5-2.3 0-3.5-.7-4.6-2L6.2 15.8c-.6-.8-.4-1.8.4-2.3.7-.4 1.5-.2 2 .4l1.4 1.6"/></svg>
+              </div>
+            </div>
+            <div class="cam-sheet">
+              <div class="progress-dots">
+                <i class="done"></i><i class="done"></i><i class="cur"></i><i></i><i></i>
+              </div>
+              <div class="cam-instruction">손 모양을 화면 중앙 가이드에 맞춰주세요</div>
+              <div class="feedback-toast">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12.5 9.5 17 19 7"/></svg>
+                정확해요! 다음 동작으로 넘어갈게요
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 3: ARCADE HUB -->
+      <div class="screen-block">
+        <div class="screen-tag"><span class="no num">03</span><span class="name">아케이드 허브</span></div>
+        <div class="phone">
+          <div class="screen sky-screen">
+            <div class="notch"></div>
+            <div class="sky-noise"></div>
+            <div class="statusbar" style="position:relative; z-index:5; color:#F5F1E8;">
+              <span class="num">9:41</span>
+              <span class="bars"><span></span><span></span><span></span><span></span></span>
+            </div>
+            <div class="arcade-top">
+              <div class="arcade-title">아케이드</div>
+              <div class="stars-pill">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.5 14.5 9l6 .8-4.3 4.1 1 6-5.2-2.9-5.2 2.9 1-6L3.5 9.8l6-.8Z"/></svg>
+                <span class="num">120</span>
+              </div>
+            </div>
+            <div class="arcade-body">
+              <div class="mode-card fall">
+                <div class="falling-deco">
+                  <svg class="glyph" viewBox="0 0 24 24" fill="#F1EEE6" opacity="0.9"><rect x="4" y="4" width="16" height="16" rx="5"/></svg>
+                  <svg class="glyph" viewBox="0 0 24 24" fill="#F1EEE6" opacity="0.6"><rect x="4" y="4" width="16" height="16" rx="5"/></svg>
+                </div>
+                <div class="mtitle">수어 낙하</div>
+                <div class="mdesc">하늘에서 내려오는 수어를 놓치지 말고 따라 해보세요</div>
+                <div class="mfoot">
+                  <div class="diff-dots"><i></i><i></i><i class="off"></i></div>
+                  <button class="mini-btn">플레이</button>
+                </div>
+              </div>
+              <div class="mode-card match">
+                <div class="mtitle">단어 맞추기</div>
+                <div class="mdesc">화면의 단어에 맞는 수어를 직접 표현해보세요</div>
+                <div class="mfoot">
+                  <div class="diff-dots"><i></i><i class="off"></i><i class="off"></i></div>
+                  <button class="mini-btn">플레이</button>
+                </div>
+              </div>
+            </div>
+            <div class="bottomnav" style="background:rgba(10,9,22,0.35); border-top:1px solid rgba(255,255,255,0.14);">
+              <div class="navitem" style="color:#C9C5DC;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1Z"/></svg>
+                <span>홈</span>
+              </div>
+              <div class="navitem" style="color:#C9C5DC;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 13V6a1.4 1.4 0 0 1 2.8 0v5.2M13.6 11.2V6a1.4 1.4 0 0 1 2.8 0v6.4M16.4 12.4v5.6c0 3-2.1 5.5-5.6 5.5-2.3 0-3.5-.7-4.6-2L4.2 17.8"/></svg>
+                <span>학습</span>
+              </div>
+              <div class="navitem active" style="color:#F7C873;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10l8-6 8 6v10a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1Z"/></svg>
+                <span>아케이드</span>
+              </div>
+              <div class="navitem" style="color:#C9C5DC;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 1 1 2.5 5.8M4 12v5.8h5.8"/></svg>
+                <span>복습</span>
+              </div>
+              <div class="navitem" style="color:#C9C5DC;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1-3.6 3.8-5.4 7-5.4s6 1.8 7 5.4"/></svg>
+                <span>내정보</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 4: FALLING GAME -->
+      <div class="screen-block">
+        <div class="screen-tag"><span class="no num">04</span><span class="name">아케이드 · 수어 낙하</span></div>
+        <div class="phone">
+          <div class="screen sky-screen">
+            <div class="notch"></div>
+            <div class="sky-noise"></div>
+            <div class="statusbar" style="position:relative; z-index:5; color:#F5F1E8;">
+              <span class="num">9:41</span>
+              <span class="bars"><span></span><span></span><span></span><span></span></span>
+            </div>
+            <div class="hud">
+              <div class="score-block">
+                <div class="lbl">점수</div>
+                <div class="val">2,140</div>
+              </div>
+              <div class="lives">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20 4.5 12.8a4.6 4.6 0 0 1 6.9-6.1l.6.6.6-.6a4.6 4.6 0 0 1 6.9 6.1Z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20 4.5 12.8a4.6 4.6 0 0 1 6.9-6.1l.6.6.6-.6a4.6 4.6 0 0 1 6.9 6.1Z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><path d="M12 20 4.5 12.8a4.6 4.6 0 0 1 6.9-6.1l.6.6.6-.6a4.6 4.6 0 0 1 6.9 6.1Z"/></svg>
+              </div>
+            </div>
+            <div class="combo-pill">6 COMBO</div>
+            <div class="lane-field">
+              <div class="lanes">
+                <div class="lane">
+                  <div class="glyph" style="top:18px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 13V6a1.4 1.4 0 0 1 2.8 0v5.2M16.4 12.4v-2a1.3 1.3 0 0 1 2.6 0v5.6c0 3-2.1 5.5-5.6 5.5"/></svg>
+                  </div>
+                </div>
+                <div class="lane">
+                  <div class="glyph" style="top:70px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="6"/></svg>
+                  </div>
+                </div>
+                <div class="lane">
+                  <div class="glyph" style="top:4px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 18 12 6l6 12Z"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="hitline"></div>
+            </div>
+            <div class="cam-strip">
+              <span class="catch-label">캐치 라인</span>
+              <svg viewBox="0 0 24 24" class="hand-icon"><path d="M8 13V6a1.4 1.4 0 0 1 2.8 0v5.2M10.8 11V4.6a1.4 1.4 0 0 1 2.8 0V11M13.6 11.2V6a1.4 1.4 0 0 1 2.8 0v6.4M16.4 12.4v-2a1.3 1.3 0 0 1 2.6 0v5.6c0 3-2.1 5.5-5.6 5.5-2.3 0-3.5-.7-4.6-2L6.2 15.8c-.6-.8-.4-1.8.4-2.3.7-.4 1.5-.2 2 .4l1.4 1.6"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 5: WORD MATCH GAME -->
+      <div class="screen-block">
+        <div class="screen-tag"><span class="no num">05</span><span class="name">아케이드 · 단어 맞추기</span></div>
+        <div class="phone">
+          <div class="screen sky-screen">
+            <div class="notch"></div>
+            <div class="sky-noise"></div>
+            <div class="statusbar" style="position:relative; z-index:5; color:#F5F1E8;">
+              <span class="num">9:41</span>
+              <span class="bars"><span></span><span></span><span></span><span></span></span>
+            </div>
+            <div class="match-top">
+              <div class="timer-ring"><div class="inner num">4.2</div></div>
+              <div class="round-lives"><i></i><i></i><i class="spent"></i></div>
+            </div>
+            <div class="prompt-block">
+              <div class="lbl">이 단어를 수어로 표현해보세요</div>
+              <div class="word">물</div>
+            </div>
+            <div class="match-cam">
+              <div class="big-reticle">
+                <i></i><i></i><i></i><i></i>
+                <svg viewBox="0 0 24 24" class="hand-icon"><path d="M8 13V6a1.4 1.4 0 0 1 2.8 0v5.2M10.8 11V4.6a1.4 1.4 0 0 1 2.8 0V11M13.6 11.2V6a1.4 1.4 0 0 1 2.8 0v6.4M16.4 12.4v-2a1.3 1.3 0 0 1 2.6 0v5.6c0 3-2.1 5.5-5.6 5.5-2.3 0-3.5-.7-4.6-2L6.2 15.8c-.6-.8-.4-1.8.4-2.3.7-.4 1.5-.2 2 .4l1.4 1.6"/></svg>
+              </div>
+            </div>
+            <div class="match-footnote">손 모양이 인식되면 자동으로 정답을 확인해요</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 6: REVIEW -->
+      <div class="screen-block">
+        <div class="screen-tag"><span class="no num">06</span><span class="name">복습노트</span></div>
+        <div class="phone">
+          <div class="screen">
+            <div class="notch"></div>
+            <div class="statusbar">
+              <span class="num">9:41</span>
+              <span class="bars"><span></span><span></span><span></span><span></span></span>
+            </div>
+            <div class="review-body">
+              <div class="review-head">
+                <div class="word">오늘 <span class="count num">8개</span>가<br>복습을 기다리고 있어요</div>
+                <div class="sub">틀렸던 수어만 모아 다시 볼 때까지 반복해요</div>
+              </div>
+              <div class="stack">
+                <div class="rcard back2"></div>
+                <div class="rcard back1"></div>
+                <div class="rcard front">
+                  <div class="top-row">
+                    <span class="wrong-badge">3번 틀림</span>
+                    <span class="last">어제 복습</span>
+                  </div>
+                  <div class="illus">
+                    <svg viewBox="0 0 24 24" class="hand-icon"><path d="M8 13V6a1.4 1.4 0 0 1 2.8 0v5.2M10.8 11V4.6a1.4 1.4 0 0 1 2.8 0V11M13.6 11.2V6a1.4 1.4 0 0 1 2.8 0v6.4M16.4 12.4v-2a1.3 1.3 0 0 1 2.6 0v5.6c0 3-2.1 5.5-5.6 5.5-2.3 0-3.5-.7-4.6-2L6.2 15.8c-.6-.8-.4-1.8.4-2.3.7-.4 1.5-.2 2 .4l1.4 1.6"/></svg>
+                  </div>
+                  <div class="word-row">
+                    <span class="word">미안해요</span>
+                    <span class="rate num">정답률 40%</span>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-teal review-cta">지금 복습하기</button>
+            </div>
+            <div class="bottomnav">
+              <div class="navitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1Z"/></svg>
+                <span>홈</span>
+              </div>
+              <div class="navitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 13V6a1.4 1.4 0 0 1 2.8 0v5.2M13.6 11.2V6a1.4 1.4 0 0 1 2.8 0v6.4M16.4 12.4v5.6c0 3-2.1 5.5-5.6 5.5-2.3 0-3.5-.7-4.6-2L4.2 17.8"/></svg>
+                <span>학습</span>
+              </div>
+              <div class="navitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10l8-6 8 6v10a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1Z"/></svg>
+                <span>아케이드</span>
+              </div>
+              <div class="navitem active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 1 1 2.5 5.8M4 12v5.8h5.8"/></svg>
+                <span>복습</span>
+              </div>
+              <div class="navitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1-3.6 3.8-5.4 7-5.4s6 1.8 7 5.4"/></svg>
+                <span>내정보</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
