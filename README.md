@@ -1,6 +1,6 @@
 # Handly — 카메라 인식 수어 학습
 
-> 저장소 위치: `D:\dev\handly` (안드로이드 빌드가 한글 경로에서 실패해서 옮김)
+> 저장소 위치: `D:\dev\handly`
 
 PRD: [docs/Handly_PRD_v2.2.md](docs/Handly_PRD_v2.2.md) · 진행 상황과 할 일: [docs/진행상황.md](docs/진행상황.md)
 
